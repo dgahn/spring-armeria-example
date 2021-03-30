@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package me.dgahn.account.message;
+
+option java_multiple_files = true;
+
+message AccountResponseProto {
+  string name = 2;
+  string email = 1;
+  AccountRoleProto role = 3;
+}
+
+enum AccountRoleProto {
+  NONE = 0;
+  USER = 1;
+  OPERATOR = 2;
+  ADMIN = 3;
+}

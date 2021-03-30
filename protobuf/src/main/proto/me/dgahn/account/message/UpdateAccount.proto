@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package me.dgahn.account.message;
+
+option java_multiple_files = true;
+
+import "me/dgahn/account/message/Account.proto";
+
+message UpdateAccountRequest {
+  string name = 4;
+  string email = 1;
+  string password = 2;
+  string new_password = 5;
+  AccountRoleProto role = 3;
+}
+
+message UpdateAccountResponse {
+  string name = 4;
+  string email = 1;
+  AccountRoleProto role = 3;
+}

@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package me.dgahn.account.message;
+
+option java_multiple_files = true;
+
+import "me/dgahn/account/message/Account.proto";
+
+message SignInRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message SignInResponse {
+  string email = 1;
+}

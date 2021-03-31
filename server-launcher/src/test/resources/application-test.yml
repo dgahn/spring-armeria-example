@@ -1,8 +1,4 @@
 spring:
-  datasource:
-    url: jdbc:tc:postgresql:///test-database
-    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-
   jpa:
     hibernate:
       ddl-auto: create

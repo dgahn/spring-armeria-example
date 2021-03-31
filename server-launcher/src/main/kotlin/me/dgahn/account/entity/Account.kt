@@ -3,7 +3,10 @@ package me.dgahn.account.entity
 import me.dgahn.account.exception.PasswordInvalidException
 import me.dgahn.account.param.UpdateParam
 import org.mindrot.jbcrypt.BCrypt
-import javax.persistence.*
+import javax.persistence.Entity
+import javax.persistence.EnumType
+import javax.persistence.Enumerated
+import javax.persistence.Id
 
 @Entity
 data class Account(

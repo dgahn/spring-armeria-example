@@ -5,7 +5,7 @@ tasks.named<ShadowJar>("shadowJar") {
     archiveFileName.set("launcher.jar")
     mergeServiceFiles()
     manifest {
-        attributes["Main-Class"] = "me.dgahn.app.LauncherKt"
+        attributes["Main-Class"] = "me.dgahn.LauncherKt"
     }
     doFirst {
         copy {

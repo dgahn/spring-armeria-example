@@ -1,6 +1,7 @@
 plugins {
     idea
     jacoco
+    application
     kotlin(KotlinPlugin.jvm) version KotlinVersion.kotlin
     kotlin(KotlinPlugin.spring) version KotlinVersion.kotlin
     id(SpringPlugin.boot) version SpringVersion.boot
@@ -12,6 +13,10 @@ plugins {
     id(LintPlugin.detekt) version LintVersion.detekt
     id(DocPlugin.dokka) version DocVersion.dokka
     id(ShadowJarPlugin.shadowJar) version ShadowJarVersion.shadowJar
+}
+
+application {
+    mainClassName = "me.dgahn.LaucherKt"
 }
 
 allprojects {

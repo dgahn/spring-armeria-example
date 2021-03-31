@@ -132,6 +132,7 @@ allprojects {
         testImplementation(TestLibs.kotestTestContainer)
         testImplementation(TestLibs.mockk)
         testImplementation(TestLibs.mssqlContainer)
+        testImplementation(HibernateLibs.p6spy)
 
         dokkaHtmlPlugin(DocLibs.dokka)
     }

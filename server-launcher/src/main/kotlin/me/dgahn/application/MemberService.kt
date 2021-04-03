@@ -21,7 +21,7 @@ class MemberService(
     fun signUp(member: Member): Long {
         validateDuplicateMember(member)
         memberRepo.save(member)
-        return member.id
+        return member.id!!
     }
 
     private fun validateDuplicateMember(member: Member) {
@@ -40,5 +40,4 @@ class MemberService(
     }
 
     fun findOne(memberId: Long) = memberRepo.findOne(memberId)
-
 }

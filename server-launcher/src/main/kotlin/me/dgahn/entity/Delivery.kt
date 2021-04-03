@@ -15,14 +15,14 @@ class Delivery(
     @Id
     @GeneratedValue
     @Column(name = "delivery_id")
-    val id: Long,
+    val id: Long? = null,
 
     @Embedded
     val address: Address,
 
     @Enumerated(EnumType.STRING)
-    val status: DeliveryStatus,
+    val status: DeliveryStatus = DeliveryStatus.READY,
 
     @OneToOne(mappedBy = "delivery", fetch = FetchType.LAZY)
-    val order: Order
+    var order: Order? = null
 )

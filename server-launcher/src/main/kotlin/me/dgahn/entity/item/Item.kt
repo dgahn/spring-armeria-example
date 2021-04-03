@@ -1,6 +1,7 @@
 package me.dgahn.entity.item
 
 import me.dgahn.entity.Category
+import me.dgahn.exception.NotEnoughStockException
 import javax.persistence.Column
 import javax.persistence.DiscriminatorColumn
 import javax.persistence.Entity
@@ -21,8 +22,21 @@ abstract class Item(
 
     val name: String,
     val price: Int,
-    val stockQuantity: Int,
+    var stockQuantity: Int,
 
     @ManyToMany
     val categories: List<Category> = emptyList()
-)
+
+) {
+    fun addStock(quantity: Int) {
+        this.stockQuantity += quantity
+    }
+
+    fun removeStock(quantity: Int) {
+        val restStock = this.stockQuantity - quantity
+        if (restStock < 0) {
+            throw NotEnoughStockException("need more stock")
+        }
+        this.stockQuantity -= quantity
+    }
+}

@@ -15,24 +15,62 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "orders")
-data class Order(
+class Order(
     @Id
     @GeneratedValue
     @Column(name = "order_id")
-    val id: Long,
+    val id: Long? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    val member: Member,
+    var member: Member? = null,
 
     @OneToMany(mappedBy = "order", cascade = [CascadeType.ALL])
-    val orderItems: List<OrderItem> = emptyList(),
+    val orderItems: MutableList<OrderItem> = mutableListOf(),
 
     @OneToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     @JoinColumn(name = "delivery_id")
-    val delivery: Delivery,
+    var delivery: Delivery,
 
-    val orderDate: LocalDateTime,
+    val orderDate: LocalDateTime = LocalDateTime.now(),
 
-    val status: OrderStatus
-)
+    var status: OrderStatus = OrderStatus.ORDER
+) {
+    fun updateMember(member: Member) {
+        this.member = member
+        member.orders.add(this)
+    }
+
+    fun addOrderItem(orderItem: OrderItem) {
+        orderItems.add(orderItem)
+        orderItem.order = this
+    }
+
+    fun updateDelivery(delivery: Delivery) {
+        this.delivery = delivery
+        delivery.order = this
+    }
+
+    companion object {
+        fun createOrder(member: Member, delivery: Delivery, vararg orderItems: OrderItem): Order {
+            val order = Order(member = member, delivery = delivery)
+            orderItems.forEach { order.orderItems.add(it) }
+            return order
+        }
+    }
+
+    /**
+     * 주문 취소
+     */
+    fun cancel() {
+        if (delivery.status == DeliveryStatus.COMPLETED) {
+            throw IllegalStateException("이미 배송완료된 상품은 취소가 불가능합니다.")
+        }
+
+        this.status = OrderStatus.CANCEL
+        orderItems.forEach { it.cancel() }
+    }
+
+    val totalPrice: Int
+        get() = orderItems.sumBy { it.totalPrice }
+}

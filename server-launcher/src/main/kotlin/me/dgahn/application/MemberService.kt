@@ -40,4 +40,10 @@ class MemberService(
     }
 
     fun findOne(memberId: Long) = memberRepo.findOne(memberId)
+
+    @Transactional // 커맨드와 쿼리를 분리한다?
+    fun update(id: Long, name: String) {
+        val member = memberRepo.findOne(id)
+        member.name = name
+    }
 }

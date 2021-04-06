@@ -6,16 +6,20 @@ import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
 import javax.persistence.OneToMany
+import javax.validation.constraints.NotEmpty
 
 @Entity
-data class Member(
+class Member(
     @Id
     @GeneratedValue
     @Column(name = "member_id")
     val id: Long? = null,
-    val name: String,
+
+    @NotEmpty
+    var name: String,
+
     @Embedded
-    val address: Address,
+    var address: Address,
 
     @OneToMany(mappedBy = "member")
     val orders: MutableList<Order> = mutableListOf()

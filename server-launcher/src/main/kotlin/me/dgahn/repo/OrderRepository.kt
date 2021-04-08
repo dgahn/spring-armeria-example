@@ -32,4 +32,5 @@ class OrderRepository {
                     " JOIN FETCH o.delivery d", Order::class.java
         ).resultList
     }
+
 }

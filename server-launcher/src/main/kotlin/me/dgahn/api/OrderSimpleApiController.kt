@@ -5,6 +5,8 @@ import me.dgahn.entity.Order
 import me.dgahn.entity.OrderStatus
 import me.dgahn.repo.OrderRepository
 import me.dgahn.repo.OrderSearch
+import me.dgahn.repo.OrderSimpleQueryDto
+import me.dgahn.repo.OrderSimpleQueryRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
@@ -22,6 +24,8 @@ class OrderSimpleApiController {
 
     @Autowired
     lateinit var orderRepo: OrderRepository
+    @Autowired
+    lateinit var orderSimpleRepo: OrderSimpleQueryRepository
 
     @GetMapping("/api/v1/simple-orders")
     fun ordersV1(): MutableList<Order> {
@@ -41,6 +45,11 @@ class OrderSimpleApiController {
     @GetMapping("/api/v3/simple-orders")
     fun ordersV3(): List<SimpleOrderDto> {
         return orderRepo.findAllWithMemberDelivery().map { SimpleOrderDto(order = it) }
+    }
+
+    @GetMapping("/api/v4/simple-orders")
+    fun odersV4(): List<OrderSimpleQueryDto> {
+        return orderSimpleRepo.findOrderDtos()
     }
 
     data class SimpleOrderDto(

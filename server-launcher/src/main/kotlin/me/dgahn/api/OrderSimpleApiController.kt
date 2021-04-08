@@ -1,11 +1,14 @@
 package me.dgahn.api
 
+import me.dgahn.entity.Address
 import me.dgahn.entity.Order
+import me.dgahn.entity.OrderStatus
 import me.dgahn.repo.OrderRepository
 import me.dgahn.repo.OrderSearch
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
+import java.time.LocalDateTime
 
 /**
  * xToOne (ManyToOne, OneToOne)최적화
@@ -22,11 +25,32 @@ class OrderSimpleApiController {
 
     @GetMapping("/api/v1/simple-orders")
     fun ordersV1(): MutableList<Order> {
-        val all =  orderRepo.findAll(OrderSearch())
+        val all = orderRepo.findAll(OrderSearch())
         all.forEach {
             it.member?.name
             it.delivery.address
         }
         return all
+    }
+
+    @GetMapping("/api/v1/simple-orders")
+    fun ordersV2(): List<SimpleOrderDto> {
+        return orderRepo.findAll(OrderSearch()).map { SimpleOrderDto(order = it) }
+    }
+
+    data class SimpleOrderDto(
+        val orderId: Long,
+        val name: String,
+        val orderDate: LocalDateTime,
+        val orderStatus: OrderStatus,
+        val address: Address,
+    ) {
+        constructor(order: Order) : this(
+            orderId = order.id!!,
+            name = order.member!!.name,
+            orderDate = order.orderDate,
+            orderStatus = order.status,
+            address = order.delivery.address
+        )
     }
 }

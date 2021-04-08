@@ -21,6 +21,7 @@ class Order(
     @Column(name = "order_id")
     val id: Long? = null,
 
+    // 지연 로딩 하는 경우 실제 값을 가져오지 않고 null로 채울 수 없기 때문에 ByteBuddyInterceptor()라는 프록시 객체를 생성한다.
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     var member: Member? = null,

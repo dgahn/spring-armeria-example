@@ -27,6 +27,7 @@ dependencies {
     implementation(platform(ArmeriaLibs.armeriaBom))
     implementation(platform(ArmeriaLibs.nettyBom))
     implementation(ArmeriaLibs.springWebfluxStarter)
+    implementation(HibernateLibs.jacksonDataType)
 
     testImplementation(SpringLibs.bootStarterTest)
 }

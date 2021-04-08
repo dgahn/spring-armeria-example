@@ -1,5 +1,6 @@
 package me.dgahn.entity
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import javax.persistence.Column
 import javax.persistence.Embedded
 import javax.persistence.Entity
@@ -23,6 +24,7 @@ class Delivery(
     @Enumerated(EnumType.STRING)
     val status: DeliveryStatus = DeliveryStatus.READY,
 
+    @JsonIgnore
     @OneToOne(mappedBy = "delivery", fetch = FetchType.LAZY)
     var order: Order? = null
 )

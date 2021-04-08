@@ -33,9 +33,14 @@ class OrderSimpleApiController {
         return all
     }
 
-    @GetMapping("/api/v1/simple-orders")
+    @GetMapping("/api/v2/simple-orders")
     fun ordersV2(): List<SimpleOrderDto> {
         return orderRepo.findAll(OrderSearch()).map { SimpleOrderDto(order = it) }
+    }
+
+    @GetMapping("/api/v3/simple-orders")
+    fun ordersV3(): List<SimpleOrderDto> {
+        return orderRepo.findAllWithMemberDelivery().map { SimpleOrderDto(order = it) }
     }
 
     data class SimpleOrderDto(

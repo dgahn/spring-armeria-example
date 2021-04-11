@@ -15,7 +15,7 @@ class OrderRepository {
 
     fun findOne(id: Long) = em.find(Order::class.java, id)
 
-    fun findAll(orderSearch: OrderSearch): MutableList<Order> {
+    fun findAll(orderSearch: OrderSearch): List<Order> {
         val queryString = "SELECT o FROM Order o JOIN o.member m WHERE o.status = :status AND m.name LIKE :name"
         return em.createQuery(queryString, Order::class.java)
             .setParameter("status", orderSearch.orderStatus)

@@ -28,7 +28,7 @@ class OrderSimpleApiController {
     lateinit var orderSimpleRepo: OrderSimpleQueryRepository
 
     @GetMapping("/api/v1/simple-orders")
-    fun ordersV1(): MutableList<Order> {
+    fun ordersV1(): List<Order> {
         val all = orderRepo.findAll(OrderSearch())
         all.forEach {
             it.member?.name

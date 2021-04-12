@@ -38,4 +38,19 @@ class OrderQueryRepository {
         ).resultList
     }
 
+    fun findOrderQueryDtosOptimization(): List<OrderQueryDto> {
+        val result = findOrders()
+        val orderIds = result.map { it.orderId }
+        val orderItems = em.createQuery(
+            "SELECT me.dgahn.repo.OrderItemQueryDto(oi.order.id, i.name, oi.orderPrice, oi.count)" +
+                    " FROM OrderItem oi" +
+                    " JOIN oi.item i" +
+                    " WHERE oi.order.id IN : orderIds", OrderItemQueryDto::class.java
+        ).setParameter("orderIds", orderIds).resultList
+
+        val orderItemMap = orderItems.groupBy { it.orderId }
+
+        return result.map { it.copy(orderItems = orderItemMap.getValue(it.orderId)) }
+    }
+
 }

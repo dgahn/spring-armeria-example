@@ -4,6 +4,7 @@ import me.dgahn.entity.Address
 import me.dgahn.entity.Order
 import me.dgahn.entity.OrderItem
 import me.dgahn.entity.OrderStatus
+import me.dgahn.repo.OrderQueryDto
 import me.dgahn.repo.OrderQueryRepository
 import me.dgahn.repo.OrderRepository
 import me.dgahn.repo.OrderSearch
@@ -46,8 +47,13 @@ class OrderApiController {
     ) = orderRepo.findAllWithMemberDelivery(offset, limit).map { OrderDto(it) }
 
     @GetMapping("/api/v4/orders")
-    fun ordersV4() {
-        orderQueryRepo.findOrderQueryDtos()
+    fun ordersV4(): List<OrderQueryDto> {
+        return orderQueryRepo.findOrderQueryDtos()
+    }
+
+    @GetMapping("/api/v5/orders")
+    fun ordersV5() {
+        return orderQueryRepo.findOrderQueryDtosOptimization()
     }
 }
 

@@ -4,6 +4,7 @@ import me.dgahn.entity.Address
 import me.dgahn.entity.Order
 import me.dgahn.entity.OrderItem
 import me.dgahn.entity.OrderStatus
+import me.dgahn.repo.OrderQueryRepository
 import me.dgahn.repo.OrderRepository
 import me.dgahn.repo.OrderSearch
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,6 +16,8 @@ class OrderApiController {
 
     @Autowired
     lateinit var orderRepo: OrderRepository
+    @Autowired
+    lateinit var orderQueryRepo: OrderQueryRepository
 
     @GetMapping("/api/v1/orders")
     fun ordersV1(): List<Order> {
@@ -41,6 +44,11 @@ class OrderApiController {
         @RequestParam(value = "offset", defaultValue = "0") offset: Int,
         @RequestParam(value = "limit", defaultValue = "100") limit: Int,
     ) = orderRepo.findAllWithMemberDelivery(offset, limit).map { OrderDto(it) }
+
+    @GetMapping("/api/v4/orders")
+    fun ordersV4() {
+        orderQueryRepo.findOrderQueryDtos()
+    }
 }
 
 // Dto로 반환할 때는 엔티티를 넣으면 안된다. 엔티티에 대한 의존을 완전히 끊어야 한다.

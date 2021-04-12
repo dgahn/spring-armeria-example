@@ -4,10 +4,7 @@ import me.dgahn.entity.Address
 import me.dgahn.entity.Order
 import me.dgahn.entity.OrderItem
 import me.dgahn.entity.OrderStatus
-import me.dgahn.repo.OrderQueryDto
-import me.dgahn.repo.OrderQueryRepository
-import me.dgahn.repo.OrderRepository
-import me.dgahn.repo.OrderSearch
+import me.dgahn.repo.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -52,8 +49,13 @@ class OrderApiController {
     }
 
     @GetMapping("/api/v5/orders")
-    fun ordersV5() {
+    fun ordersV5(): List<OrderQueryDto> {
         return orderQueryRepo.findOrderQueryDtosOptimization()
+    }
+
+    @GetMapping("/api/v6/orders")
+    fun ordersV6(): List<OrderFlatDto> {
+        return orderQueryRepo.findAllByDtoFlat()
     }
 }
 

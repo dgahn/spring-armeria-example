@@ -53,4 +53,15 @@ class OrderQueryRepository {
         return result.map { it.copy(orderItems = orderItemMap.getValue(it.orderId)) }
     }
 
+    fun findAllByDtoFlat(): List<OrderFlatDto> {
+        return em.createQuery(
+            "SELECT me.dgahn.repo.OrderFlatDto(o.id, m.name, o.orderDate, o.status, d.address, i.name, oi.price, oi.count)" +
+                    " FROM Order o" +
+                    " JOIN o.member m" +
+                    " JOIN o.delivery d" +
+                    " JOIN o.orderItems oi" +
+                    " JOIN oi.item i", OrderFlatDto::class.java
+        ).resultList
+    }
+
 }

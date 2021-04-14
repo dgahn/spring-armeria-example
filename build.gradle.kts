@@ -4,6 +4,7 @@ plugins {
     application
     kotlin(KotlinPlugin.jvm) version KotlinVersion.kotlin
     kotlin(KotlinPlugin.spring) version KotlinVersion.kotlin
+    id(KotlinPlugin.kapt) version KotlinVersion.kotlin
     id(SpringPlugin.boot) version SpringVersion.boot
     id(SpringPlugin.dependencyManagement) version SpringVersion.dependencyManagement
     id(KotlinPlugin.noarg) version KotlinVersion.kotlin
@@ -32,17 +33,18 @@ allprojects {
         mavenCentral()
     }
 
-    apply(plugin=KotlinPlugin.kotlin)
-    apply(plugin=KotlinPlugin.idea)
+    apply(plugin = KotlinPlugin.kotlin)
+    apply(plugin = KotlinPlugin.idea)
     // @Entity 클래스 바이트 코드 생성 시 인자 없는 기본 생성자 제네레이션을 위한 레퍼런스
-    apply(plugin=KotlinPlugin.noarg)
-    apply(plugin=KotlinPlugin.allOpen)
+    apply(plugin = KotlinPlugin.noarg)
+    apply(plugin = KotlinPlugin.allOpen)
     // 코틀린 정적 분석 도구
-    apply(plugin=LintPlugin.detekt)
-    apply(plugin=LintPlugin.kotlinLinter)
-    apply(plugin=DocPlugin.dokka)
-    apply(plugin=DocPlugin.jacoco)
-    apply(plugin=ShadowJarPlugin.shadowJar)
+    apply(plugin = LintPlugin.detekt)
+    apply(plugin = LintPlugin.kotlinLinter)
+    apply(plugin = DocPlugin.dokka)
+    apply(plugin = DocPlugin.jacoco)
+    apply(plugin = ShadowJarPlugin.shadowJar)
+    apply(plugin = KotlinPlugin.kapt)
 
     jacoco {
         toolVersion = DocVersion.jacoco
@@ -104,12 +106,6 @@ allprojects {
         }
     }
 
-    noArg {
-        AllOpen.annotationList.forEach {
-            annotation(it)
-        }
-    }
-
     dependencies {
         implementation(LogLibs.kotlinLogging)
         implementation(LogLibs.logback)
@@ -124,6 +120,8 @@ allprojects {
         implementation(ArmeriaLibs.grpc)
 
         implementation(DatabaseLibs.mssql)
+        kapt("com.querydsl:querydsl-apt:4.2.2")
+        kapt("org.springframework.boot:spring-boot-configuration-processor")
 
         testImplementation(TestLibs.runnerJunit5)
         testImplementation(TestLibs.assertionsCore)
@@ -136,6 +134,13 @@ allprojects {
 
         dokkaHtmlPlugin(DocLibs.dokka)
     }
+
+    noArg {
+        AllOpen.annotationList.forEach {
+            annotation(it)
+        }
+    }
+
 
     kotlinter {
         ignoreFailures = false

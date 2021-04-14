@@ -5,6 +5,7 @@ object KotlinPlugin {
     const val jvm = "jvm"
     const val noarg = "org.jetbrains.kotlin.plugin.noarg"
     const val allOpen = "org.jetbrains.kotlin.plugin.allopen"
+    const val kapt = "org.jetbrains.kotlin.kapt"
 }
 
 object KotlinVersion {

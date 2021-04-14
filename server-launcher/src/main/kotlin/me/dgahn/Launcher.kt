@@ -17,7 +17,6 @@ open class Launcher {
 //        hibernate5Module.configure(Hibernate5Module.Feature.FORCE_LAZY_LOADING, true)
         return hibernate5Module
     }
-
 }
 
 @Suppress("SpreadOperator")

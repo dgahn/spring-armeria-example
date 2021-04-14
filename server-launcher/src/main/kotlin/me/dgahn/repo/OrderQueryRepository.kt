@@ -21,9 +21,10 @@ class OrderQueryRepository {
     private fun findOrderItems(orderId: Long): List<OrderItemQueryDto> {
         return em.createQuery(
             "SELECT me.dgahn.repo.OrderItemQueryDto(oi.order.id, i.name, oi.orderPrice, oi.count)" +
-                    " FROM OrderItem oi" +
-                    " JOIN oi.item i" +
-                    " WHERE oi.order.id = : orderId", OrderItemQueryDto::class.java
+                " FROM OrderItem oi" +
+                " JOIN oi.item i" +
+                " WHERE oi.order.id = : orderId",
+            OrderItemQueryDto::class.java
         )
             .setParameter("orderId", orderId)
             .resultList
@@ -31,10 +32,11 @@ class OrderQueryRepository {
 
     fun findOrders(): List<OrderQueryDto> {
         return em.createQuery(
-            "SELECT me.dgahn.repo.OrderQueryDto(o.id, m.name, o.orderDate, o.status, d.address)"
-                    + " FROM Order o"
-                    + " JOIN o.member m"
-                    + " JOIN o.delivery d", OrderQueryDto::class.java
+            "SELECT me.dgahn.repo.OrderQueryDto(o.id, m.name, o.orderDate, o.status, d.address)" +
+                " FROM Order o" +
+                " JOIN o.member m" +
+                " JOIN o.delivery d",
+            OrderQueryDto::class.java
         ).resultList
     }
 
@@ -43,9 +45,10 @@ class OrderQueryRepository {
         val orderIds = result.map { it.orderId }
         val orderItems = em.createQuery(
             "SELECT me.dgahn.repo.OrderItemQueryDto(oi.order.id, i.name, oi.orderPrice, oi.count)" +
-                    " FROM OrderItem oi" +
-                    " JOIN oi.item i" +
-                    " WHERE oi.order.id IN : orderIds", OrderItemQueryDto::class.java
+                " FROM OrderItem oi" +
+                " JOIN oi.item i" +
+                " WHERE oi.order.id IN : orderIds",
+            OrderItemQueryDto::class.java
         ).setParameter("orderIds", orderIds).resultList
 
         val orderItemMap = orderItems.groupBy { it.orderId }
@@ -56,12 +59,12 @@ class OrderQueryRepository {
     fun findAllByDtoFlat(): List<OrderFlatDto> {
         return em.createQuery(
             "SELECT me.dgahn.repo.OrderFlatDto(o.id, m.name, o.orderDate, o.status, d.address, i.name, oi.price, oi.count)" +
-                    " FROM Order o" +
-                    " JOIN o.member m" +
-                    " JOIN o.delivery d" +
-                    " JOIN o.orderItems oi" +
-                    " JOIN oi.item i", OrderFlatDto::class.java
+                " FROM Order o" +
+                " JOIN o.member m" +
+                " JOIN o.delivery d" +
+                " JOIN o.orderItems oi" +
+                " JOIN oi.item i",
+            OrderFlatDto::class.java
         ).resultList
     }
-
 }

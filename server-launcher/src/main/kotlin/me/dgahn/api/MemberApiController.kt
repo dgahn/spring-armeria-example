@@ -53,7 +53,7 @@ class MemberApiController {
         @RequestBody @Valid request: UpdateMemberRequest
     ): UpdateMemberResponse {
         memberService.update(id, request.name)
-        val findMember = memberService.findOne(id)
+        val findMember = memberService.findOne(id).get()
         return UpdateMemberResponse(findMember.id!!, findMember.name)
     }
 }

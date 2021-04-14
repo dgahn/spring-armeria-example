@@ -28,8 +28,9 @@ class OrderRepository {
     fun findAllWithMemberDelivery(): List<Order> {
         return em.createQuery(
             "SELECT o FROM Order o" +
-                    " JOIN FETCH o.member m" +
-                    " JOIN FETCH o.delivery d", Order::class.java
+                " JOIN FETCH o.member m" +
+                " JOIN FETCH o.delivery d",
+            Order::class.java
         ).resultList
     }
 
@@ -38,20 +39,22 @@ class OrderRepository {
     // 컬렉션 FETCH JOIN 한개만 하자.
     fun findAllWithItem(): List<Order> = em.createQuery(
         "SELECT DISTINCT o FROM Order o" +
-                " JOIN FETCH o.member m" +
-                " JOIN FETCH o.delivery d" +
-                " JOIN FETCH o.orderItems oi" +
-                " JOIN FETCH oi.item i", Order::class.java
+            " JOIN FETCH o.member m" +
+            " JOIN FETCH o.delivery d" +
+            " JOIN FETCH o.orderItems oi" +
+            " JOIN FETCH oi.item i",
+        Order::class.java
     ).resultList
 
     fun findAllWithMemberDelivery(offset: Int, limit: Int): List<Order> {
         return em.createQuery(
             "SELECT o FROM Order o" +
-                    " JOIN FETCH o.member m" +
-                    " JOIN FETCH o.delivery d", Order::class.java)
+                " JOIN FETCH o.member m" +
+                " JOIN FETCH o.delivery d",
+            Order::class.java
+        )
             .setFirstResult(offset)
             .setMaxResults(limit)
             .resultList
     }
-
 }

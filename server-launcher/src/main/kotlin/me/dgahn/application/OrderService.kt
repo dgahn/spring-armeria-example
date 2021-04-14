@@ -25,7 +25,7 @@ class OrderService {
 
     @Transactional
     fun order(memberId: Long, itemId: Long, count: Int): Long {
-        val member = memberRepository.findOne(memberId)
+        val member = memberRepository.findById(memberId).get()
         val item = itemRepository.findOne(itemId)
         val delivery = Delivery(address = member.address)
 

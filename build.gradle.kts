@@ -119,17 +119,11 @@ allprojects {
         implementation(SpringLibs.bootStarterJpa)
         implementation(ArmeriaLibs.grpc)
 
-        implementation(DatabaseLibs.mssql)
-        kapt("com.querydsl:querydsl-apt:4.2.2")
-        kapt("org.springframework.boot:spring-boot-configuration-processor")
-
         testImplementation(TestLibs.runnerJunit5)
         testImplementation(TestLibs.assertionsCore)
         testImplementation(TestLibs.kotestProperty)
         testImplementation(TestLibs.kotestSpring)
-        testImplementation(TestLibs.kotestTestContainer)
         testImplementation(TestLibs.mockk)
-        testImplementation(TestLibs.mssqlContainer)
         testImplementation(HibernateLibs.p6spy)
 
         dokkaHtmlPlugin(DocLibs.dokka)

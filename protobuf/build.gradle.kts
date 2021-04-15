@@ -60,4 +60,3 @@ sourceSets {
         java.srcDir(GrpcSourceSet.grpcKt)
     }
 }
-

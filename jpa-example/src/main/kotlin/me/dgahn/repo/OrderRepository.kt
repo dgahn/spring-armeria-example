@@ -1,27 +1,32 @@
 package me.dgahn.repo
 
+import com.querydsl.jpa.impl.JPAQueryFactory
 import me.dgahn.entity.Order
-import org.springframework.beans.factory.annotation.Autowired
+import me.dgahn.entity.QMember.member
+import me.dgahn.entity.QOrder.order
 import org.springframework.stereotype.Repository
 import javax.persistence.EntityManager
 
 @Repository
-class OrderRepository {
-
-    @Autowired
-    lateinit var em: EntityManager
+class OrderRepository(
+    private val em: EntityManager
+) {
+    val query: JPAQueryFactory = JPAQueryFactory(em)
 
     fun save(order: Order) = em.persist(order)
 
     fun findOne(id: Long) = em.find(Order::class.java, id)
 
     fun findAll(orderSearch: OrderSearch): List<Order> {
-        val queryString = "SELECT o FROM Order o JOIN o.member m WHERE o.status = :status AND m.name LIKE :name"
-        return em.createQuery(queryString, Order::class.java)
-            .setParameter("status", orderSearch.orderStatus)
-            .setParameter("name", orderSearch.memberName)
-            .setMaxResults(1000)
-            .resultList
+        return query.select(order)
+            .from(order)
+            .join(order.member, member)
+            .limit(1000)
+            .where(
+                if (orderSearch.orderStatus != null) order.status.eq(orderSearch.orderStatus) else null,
+                if (orderSearch.memberName != null) member.name.like(orderSearch.memberName) else null
+            )
+            .fetch()
     }
 
     // JPA에만 있는 문법으로 fetch를 하면 실제 데이터를 다 가져와서 Entity의 값을 채워준다.

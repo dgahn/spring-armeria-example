@@ -28,8 +28,15 @@ dependencies {
     implementation(platform(ArmeriaLibs.nettyBom))
     implementation(ArmeriaLibs.springWebfluxStarter)
     implementation(HibernateLibs.jacksonDataType)
+    implementation(DatabaseLibs.mssql)
+
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor:2.4.4")
+    implementation("com.querydsl:querydsl-jpa:4.2.2")
+    kapt("com.querydsl:querydsl-apt:4.2.2:jpa")
 
     testImplementation(SpringLibs.bootStarterTest)
+    testImplementation(TestLibs.mssqlContainer)
+    testImplementation(TestLibs.kotestTestContainer)
 }
 
 tasks.jacocoTestCoverageVerification {
@@ -50,5 +57,13 @@ tasks.jacocoTestCoverageVerification {
                 "*/*RouteService.kt"
             )
         }
+    }
+}
+
+idea {
+    module {
+        val kaptMain = file("${buildDir}/generated/source/kapt/main")
+        sourceDirs.add(kaptMain)
+        generatedSourceDirs.add(kaptMain)
     }
 }

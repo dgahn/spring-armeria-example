@@ -1,4 +1,5 @@
 rootProject.name="armeria-spring-example"
 
 include("protobuf")
-include("server-launcher")
+include("jpa-example")
+include("spring-data-jpa-example")

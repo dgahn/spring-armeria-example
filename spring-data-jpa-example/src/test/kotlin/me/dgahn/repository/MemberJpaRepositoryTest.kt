@@ -78,4 +78,29 @@ open class MemberJpaRepositoryTest(
 
         findMembers.first() shouldBe m1
     }
+
+    /**
+     * 나이가 10살
+     * 이름으로 내림차순
+     * 첫 번째 페이지, 페이지당 보여줄 데이터는 3건
+     */
+
+    @Test
+    fun `paging 테스트`() {
+        memberJpaRepository.save(Member(username = "member1", age = 10))
+        memberJpaRepository.save(Member(username = "member2", age = 10))
+        memberJpaRepository.save(Member(username = "member3", age = 10))
+        memberJpaRepository.save(Member(username = "member4", age = 10))
+        memberJpaRepository.save(Member(username = "member5", age = 10))
+
+        val age = 10
+        val offset = 0
+        val limit = 3
+
+        val members = memberJpaRepository.findByPage(age, offset, limit)
+        val count = memberJpaRepository.totalCount(age)
+
+        members shouldHaveSize 3
+        count shouldBe 5
+    }
 }

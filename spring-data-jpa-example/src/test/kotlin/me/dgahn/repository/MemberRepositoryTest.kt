@@ -3,6 +3,7 @@ package me.dgahn.repository
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.extensions.spring.SpringExtension
 import io.kotest.matchers.collections.shouldContain
+import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.collections.shouldNotContain
 import io.kotest.matchers.shouldBe
@@ -10,6 +11,7 @@ import me.dgahn.entity.Member
 import me.dgahn.entity.Team
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.annotation.Rollback
+import java.util.Optional
 import javax.transaction.Transactional
 
 @SpringBootTest
@@ -130,5 +132,26 @@ open class MemberRepositoryTest(
         val findMembers = memberRepository.findByNames(listOf("AAA", "BBB"))
 
         findMembers shouldBe listOf(m1, m2)
+    }
+
+
+    @Test
+    fun `리턴 타입 테스트`() {
+        val m1 = Member(username = "AAA", age = 10)
+        val m2 = Member(username = "BBB", age = 20)
+        memberRepository.save(m1)
+        memberRepository.save(m2)
+
+        val findMembers = memberRepository.findListByUsername("AAA")
+        findMembers shouldContain m1
+
+        val findMember = memberRepository.findMemberByUsername("AAA")
+        findMember shouldBe m1
+
+        val findNullMember = memberRepository.findMemberByUsername("abc")
+        findNullMember shouldBe null
+
+        val findOptionalMember = memberRepository.findOptionalByUsername("AAA")
+        findOptionalMember shouldBe Optional.of(m1)
     }
 }

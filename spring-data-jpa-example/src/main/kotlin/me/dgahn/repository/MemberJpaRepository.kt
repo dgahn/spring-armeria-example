@@ -40,4 +40,16 @@ class MemberJpaRepository(
     fun findByUsername(username: String) = em.createNamedQuery("Member.findByUsername", Member::class.java)
         .setParameter("username", username)
         .resultList
+
+    fun findByPage(age: Int, offset: Int, limit: Int): List<Member> =
+        em.createQuery("SELECT m FROM Member m WHERE m.age = :age ORDER BY m.username DESC", Member::class.java)
+            .setParameter("age", age)
+            .setFirstResult(offset)
+            .setMaxResults(limit)
+            .resultList
+
+    fun totalCount(age: Int) = em.createQuery("SELECT count(m) FROM Member m WHERE m.age = :age", java.lang.Long::class.java)
+        .setParameter("age", age)
+        .singleResult
+        .toLong()
 }

@@ -66,4 +66,16 @@ open class MemberJpaRepositoryTest(
         findMember shouldContain m2
         findMember shouldNotContain m1
     }
+
+    @Test
+    fun `NamedQuery 테스트`() {
+        val m1 = Member(username = "AAA", age = 10)
+        val m2 = Member(username = "AAA", age = 20)
+        memberJpaRepository.save(m1)
+        memberJpaRepository.save(m2)
+
+        val findMembers = memberJpaRepository.findByUsername("AAA")
+
+        findMembers.first() shouldBe m1
+    }
 }

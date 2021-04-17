@@ -28,9 +28,16 @@ class MemberJpaRepository(
 
     fun find(id: Long): Member = em.find(Member::class.java, id)
 
-    fun findByUsernameAndAgeGreaterThan(username: String, age: Int) =
-        em.createQuery("SELECT m FROM Member m WHERE m.username = :username AND m.age > :age")
+    fun findByUsernameAndAgeGreaterThan(username: String, age: Int): MutableList<Member> =
+        em.createQuery(
+            "SELECT m FROM Member m WHERE m.username = :username AND m.age > :age",
+            Member::class.java
+        )
             .setParameter("username", username)
             .setParameter("age", age)
             .resultList
+
+    fun findByUsername(username: String) = em.createNamedQuery("Member.findByUsername", Member::class.java)
+        .setParameter("username", username)
+        .resultList
 }

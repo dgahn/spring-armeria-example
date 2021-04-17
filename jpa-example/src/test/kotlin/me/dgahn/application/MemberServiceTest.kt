@@ -3,7 +3,6 @@ package me.dgahn.application
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.extensions.spring.SpringExtension
-import io.kotest.matchers.shouldBe
 import me.dgahn.entity.Address
 import me.dgahn.entity.Member
 import me.dgahn.repo.MemberRepository

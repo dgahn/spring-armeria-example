@@ -2,6 +2,7 @@ package me.dgahn.repository
 
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.extensions.spring.SpringExtension
+import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import me.dgahn.entity.Member
 import org.springframework.boot.test.context.SpringBootTest
@@ -23,5 +24,31 @@ open class MemberJpaRepositoryTest(
 
         val findMember = memberJpaRepository.find(savedMember.id!!)
         findMember shouldBe savedMember
+    }
+
+    @Test
+    fun `구성원에 대한 CRUD 테스트`() {
+        val member1 = Member(username = "member1", age = 10)
+        val member2 = Member(username = "member2", age = 12)
+
+        memberJpaRepository.save(member1)
+        memberJpaRepository.save(member2)
+
+        val findMember1 = memberJpaRepository.findById(member1.id!!)
+        val findMember2 = memberJpaRepository.findById(member2.id!!)
+
+        findMember1 shouldBe member1
+        findMember2 shouldBe member2
+
+        val members = memberJpaRepository.findAll()
+        members shouldHaveSize 2
+
+        val count = memberJpaRepository.count()
+        count shouldBe 2
+
+        memberJpaRepository.delete(member1)
+        memberJpaRepository.delete(member2)
+        val deletedCount = memberJpaRepository.count()
+        deletedCount shouldBe 0
     }
 }

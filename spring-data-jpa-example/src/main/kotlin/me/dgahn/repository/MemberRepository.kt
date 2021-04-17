@@ -1,5 +1,6 @@
 package me.dgahn.repository
 
+import me.dgahn.dto.MemberDto
 import me.dgahn.entity.Member
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
@@ -14,4 +15,10 @@ interface MemberRepository : JpaRepository<Member, Long> {
 
     @Query("SELECT m FROM Member m WHERE m.username = :username AND m.age = :age")
     fun findUser(@Param("username") username: String, @Param("age") age: Int): Member
+
+    @Query("SELECT m.username FROM Member m")
+    fun findUsernameList(): List<String>
+
+    @Query("SELECT new me.dgahn.dto.MemberDto(m.id, m.username, t.name) FROM Member m join m.team t")
+    fun findMemberDto(): List<MemberDto>
 }

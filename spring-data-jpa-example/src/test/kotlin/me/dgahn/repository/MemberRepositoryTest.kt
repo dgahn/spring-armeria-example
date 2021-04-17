@@ -7,6 +7,7 @@ import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.collections.shouldNotContain
 import io.kotest.matchers.shouldBe
 import me.dgahn.entity.Member
+import me.dgahn.entity.Team
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.annotation.Rollback
 import javax.transaction.Transactional
@@ -15,7 +16,8 @@ import javax.transaction.Transactional
 @Transactional
 @Rollback(false)
 open class MemberRepositoryTest(
-    private val memberRepository: MemberRepository
+    private val memberRepository: MemberRepository,
+    private val teamRepository: TeamRepository
 ) : AnnotationSpec() {
     override fun extensions() = listOf(SpringExtension)
 
@@ -89,5 +91,33 @@ open class MemberRepositoryTest(
         val findMembers = memberRepository.findUser("AAA", 10)
 
         findMembers shouldBe m1
+    }
+
+    @Test
+    fun `findUsername 목록 테스트`() {
+        val m1 = Member(username = "AAA", age = 10)
+        val m2 = Member(username = "AAA", age = 20)
+        memberRepository.save(m1)
+        memberRepository.save(m2)
+
+        val findMembers = memberRepository.findUsernameList()
+
+        findMembers shouldBe listOf("AAA", "AAA")
+    }
+
+
+    @Test
+    fun `findMemberDto 테스트`() {
+        val team = Team(name = "teamA")
+        teamRepository.save(team)
+        val m1 = Member(username = "AAA", age = 10)
+        m1.changeTeam(team)
+        memberRepository.save(m1)
+
+        val findMemberDto = memberRepository.findMemberDto()
+        findMemberDto.forEach {
+            it.teamName shouldBe "teamA"
+            it.username shouldBe "AAA"
+        }
     }
 }

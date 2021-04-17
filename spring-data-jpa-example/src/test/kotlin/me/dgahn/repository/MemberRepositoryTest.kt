@@ -2,7 +2,9 @@ package me.dgahn.repository
 
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.extensions.spring.SpringExtension
+import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.collections.shouldNotContain
 import io.kotest.matchers.shouldBe
 import me.dgahn.entity.Member
 import org.springframework.boot.test.context.SpringBootTest
@@ -50,5 +52,18 @@ open class MemberRepositoryTest(
         memberRepository.delete(member2)
         val deletedCount = memberRepository.count()
         deletedCount shouldBe 0
+    }
+
+    @Test
+    fun `사용자 이름과 나이로 사용자를 조회할 수 있다`() {
+        val m1 = Member(username = "AAA", age = 10)
+        val m2 = Member(username = "AAA", age = 20)
+        memberRepository.save(m1)
+        memberRepository.save(m2)
+
+        val findMember = memberRepository.findByUsernameAndAgeGreaterThan("AAA", 15)
+
+        findMember shouldContain m2
+        findMember shouldNotContain m1
     }
 }

@@ -27,4 +27,10 @@ class MemberJpaRepository(
         em.createQuery("SELECT count(m) FROM Member m", java.lang.Long::class.java).singleResult.toLong()
 
     fun find(id: Long): Member = em.find(Member::class.java, id)
+
+    fun findByUsernameAndAgeGreaterThan(username: String, age: Int) =
+        em.createQuery("SELECT m FROM Member m WHERE m.username = :username AND m.age > :age")
+            .setParameter("username", username)
+            .setParameter("age", age)
+            .resultList
 }

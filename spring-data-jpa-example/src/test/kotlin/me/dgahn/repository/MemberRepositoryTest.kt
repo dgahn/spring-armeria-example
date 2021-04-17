@@ -105,7 +105,6 @@ open class MemberRepositoryTest(
         findMembers shouldBe listOf("AAA", "AAA")
     }
 
-
     @Test
     fun `findMemberDto 테스트`() {
         val team = Team(name = "teamA")
@@ -119,5 +118,17 @@ open class MemberRepositoryTest(
             it.teamName shouldBe "teamA"
             it.username shouldBe "AAA"
         }
+    }
+
+    @Test
+    fun `findByNameds 테스트`() {
+        val m1 = Member(username = "AAA", age = 10)
+        val m2 = Member(username = "BBB", age = 20)
+        memberRepository.save(m1)
+        memberRepository.save(m2)
+
+        val findMembers = memberRepository.findByNames(listOf("AAA", "BBB"))
+
+        findMembers shouldBe listOf(m1, m2)
     }
 }

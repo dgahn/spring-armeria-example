@@ -2,6 +2,9 @@ package me.dgahn.repository
 
 import me.dgahn.dto.MemberDto
 import me.dgahn.entity.Member
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Slice
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
@@ -32,4 +35,8 @@ interface MemberRepository : JpaRepository<Member, Long> {
 
     fun findOptionalByUsername(username: String): Optional<Member>
 
+    @Query(value = "SELECT m FROM Member m LEFT JOIN m.team t", countQuery = "SELECT count(m.username) FROM Member m")
+    fun findByAge(age: Int, pageable: Pageable): Page<Member>
+
+    fun findSliceByAge(age: Int, pageable: Pageable): Slice<Member>
 }

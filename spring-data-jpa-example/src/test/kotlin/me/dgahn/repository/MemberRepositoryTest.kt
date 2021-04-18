@@ -3,13 +3,16 @@ package me.dgahn.repository
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.extensions.spring.SpringExtension
 import io.kotest.matchers.collections.shouldContain
-import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.collections.shouldNotContain
 import io.kotest.matchers.shouldBe
+import me.dgahn.dto.MemberDto
 import me.dgahn.entity.Member
 import me.dgahn.entity.Team
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Slice
+import org.springframework.data.domain.Sort
 import org.springframework.test.annotation.Rollback
 import java.util.Optional
 import javax.transaction.Transactional
@@ -153,5 +156,41 @@ open class MemberRepositoryTest(
 
         val findOptionalMember = memberRepository.findOptionalByUsername("AAA")
         findOptionalMember shouldBe Optional.of(m1)
+    }
+
+    /**
+     * 나이가 10살
+     * 이름으로 내림차순
+     * 첫 번째 페이지, 페이지당 보여줄 데이터는 3건
+     */
+
+    @Test
+    fun `paging 테스트`() {
+        memberRepository.save(Member(username = "member1", age = 10))
+        memberRepository.save(Member(username = "member2", age = 10))
+        memberRepository.save(Member(username = "member3", age = 10))
+        memberRepository.save(Member(username = "member4", age = 10))
+        memberRepository.save(Member(username = "member5", age = 10))
+
+        val age = 10
+        val pageRequest = PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC, "username"))
+
+        val page = memberRepository.findByAge(age, pageRequest)
+
+        page.content shouldHaveSize 3
+        page.totalElements shouldBe 5
+        page.number shouldBe 0
+        page.totalPages shouldBe 2
+        page.isFirst shouldBe true
+        page.hasNext() shouldBe true
+        // page에 map이 존재함.
+        page.map { MemberDto(id = it.id!!, username = it.username, teamName = "") }
+
+        val slice: Slice<Member> = memberRepository.findSliceByAge(age, pageRequest)
+
+        slice.content shouldHaveSize 3
+        slice.number shouldBe 0
+        slice.isFirst shouldBe true
+        slice.hasNext() shouldBe true
     }
 }

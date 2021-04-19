@@ -6,6 +6,7 @@ import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.collections.shouldNotContain
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import me.dgahn.dto.MemberDto
 import me.dgahn.entity.Member
 import me.dgahn.entity.Team
@@ -235,5 +236,41 @@ open class MemberRepositoryTest(
         val findMembers = memberRepository.findAll()
 
         members shouldBe findMembers
+    }
+
+    @Test
+    fun `쿼리 힌트`() {
+        val savedMember = memberRepository.save(Member(username = "member1", age = 10))
+        em.flush()
+        em.clear()
+
+        val findMember = memberRepository.findById(savedMember.id!!)
+        findMember.get().username = "member2"
+        em.flush()
+        em.clear()
+        val findMember1 = memberRepository.findById(savedMember.id!!)
+        findMember1.get().username shouldBe "member2"
+
+        em.flush()
+        em.clear()
+
+        val findMember2 = memberRepository.findReadOnlyByUsername("member2")
+        findMember2.username = "member1"
+
+        em.flush()
+        em.clear()
+
+        val findMember3 = memberRepository.findById(savedMember.id!!)
+        findMember3.get().username shouldBe "member2"
+        findMember3.get().username shouldNotBe "member1"
+    }
+
+    @Test
+    fun `Lock 테스트`() {
+        val savedMember = memberRepository.save(Member(username = "member1", age = 10))
+        em.flush()
+        em.clear()
+
+        val findMember = memberRepository.findLockByUsername("member1")
     }
 }

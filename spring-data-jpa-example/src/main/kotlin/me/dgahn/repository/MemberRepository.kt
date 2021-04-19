@@ -2,16 +2,19 @@ package me.dgahn.repository
 
 import me.dgahn.dto.MemberDto
 import me.dgahn.entity.Member
-import me.dgahn.entity.Team
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Slice
 import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Lock
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
+import org.springframework.data.jpa.repository.QueryHints
 import org.springframework.data.repository.query.Param
 import java.util.Optional
+import javax.persistence.LockModeType
+import javax.persistence.QueryHint
 
 interface MemberRepository : JpaRepository<Member, Long> {
 
@@ -59,4 +62,10 @@ interface MemberRepository : JpaRepository<Member, Long> {
 
     @EntityGraph(attributePaths = ["team"])
     fun findEntityGraphByUsername(@Param("username") username: String)
+
+    @QueryHints(QueryHint(name = "org.hibernate.readOnly", value = "true"))
+    fun findReadOnlyByUsername(username: String): Member
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    fun findLockByUsername(username: String)
 }

@@ -15,6 +15,7 @@ import org.springframework.data.domain.Slice
 import org.springframework.data.domain.Sort
 import org.springframework.test.annotation.Rollback
 import java.util.Optional
+import javax.persistence.EntityManager
 import javax.transaction.Transactional
 
 @SpringBootTest
@@ -22,7 +23,8 @@ import javax.transaction.Transactional
 @Rollback(false)
 open class MemberRepositoryTest(
     private val memberRepository: MemberRepository,
-    private val teamRepository: TeamRepository
+    private val teamRepository: TeamRepository,
+    private val em: EntityManager
 ) : AnnotationSpec() {
     override fun extensions() = listOf(SpringExtension)
 
@@ -192,5 +194,26 @@ open class MemberRepositoryTest(
         slice.number shouldBe 0
         slice.isFirst shouldBe true
         slice.hasNext() shouldBe true
+    }
+
+    @Test
+    fun `bulkUpdate 테스트`() {
+        memberRepository.save(Member(username = "member1", age = 10))
+        memberRepository.save(Member(username = "member2", age = 20))
+        memberRepository.save(Member(username = "member3", age = 30))
+        memberRepository.save(Member(username = "member4", age = 40))
+        memberRepository.save(Member(username = "member5", age = 50))
+
+        val result = memberRepository.bulkAgePlus(20)
+        // 남아있는 연산을 적용
+//        em.flush()
+        // 말그대로 초기화
+//        em.clear()
+
+        val findMembers = memberRepository.findByUsername("member5")
+
+        findMembers.first().age shouldBe 51
+
+        result shouldBe 4
     }
 }

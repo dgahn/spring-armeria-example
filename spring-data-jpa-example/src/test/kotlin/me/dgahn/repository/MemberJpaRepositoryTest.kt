@@ -103,4 +103,17 @@ open class MemberJpaRepositoryTest(
         members shouldHaveSize 3
         count shouldBe 5
     }
+
+    @Test
+    fun `bulkUpdate 테스트`() {
+        memberJpaRepository.save(Member(username = "member1", age = 10))
+        memberJpaRepository.save(Member(username = "member2", age = 20))
+        memberJpaRepository.save(Member(username = "member3", age = 30))
+        memberJpaRepository.save(Member(username = "member4", age = 40))
+        memberJpaRepository.save(Member(username = "member5", age = 50))
+
+        val result = memberJpaRepository.bulkAgePlus(20)
+
+        result shouldBe 4
+    }
 }

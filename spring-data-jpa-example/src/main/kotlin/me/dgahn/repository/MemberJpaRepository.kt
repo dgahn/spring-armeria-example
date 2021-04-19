@@ -52,4 +52,8 @@ class MemberJpaRepository(
         .setParameter("age", age)
         .singleResult
         .toLong()
+
+    fun bulkAgePlus(age: Int) = em.createQuery("UPDATE Member m SET m.age = m.age + 1 WHERE m.age >= :age")
+        .setParameter("age", age)
+        .executeUpdate()
 }

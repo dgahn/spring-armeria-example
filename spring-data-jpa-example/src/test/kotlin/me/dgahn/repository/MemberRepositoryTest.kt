@@ -216,4 +216,24 @@ open class MemberRepositoryTest(
 
         result shouldBe 4
     }
+
+    @Test
+    fun `게으른 멤버 찾기`() {
+        val teamA = Team(name = "teamA")
+        val teamB = Team(name = "teamB")
+        teamRepository.save(teamA)
+        teamRepository.save(teamB)
+        val member1 = Member(username = "member1", age = 10, team = teamA)
+        val member2 = Member(username = "member1", age = 10, team = teamB)
+        memberRepository.save(member1)
+        memberRepository.save(member2)
+
+        em.flush()
+        em.clear()
+
+        val members = memberRepository.findMemberFetchJoin()
+        val findMembers = memberRepository.findAll()
+
+        members shouldBe findMembers
+    }
 }

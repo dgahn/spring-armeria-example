@@ -24,7 +24,7 @@ class Member(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id")
     var team: Team? = null
-) {
+): BaseEntity() {
     constructor(username: String, age: Int, team: Team) : this(
         username = username,
         age = age

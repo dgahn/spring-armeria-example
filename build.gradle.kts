@@ -34,7 +34,7 @@ allprojects {
     }
 
     apply(plugin = KotlinPlugin.kotlin)
-    apply(plugin = KotlinPlugin.idea)
+
     // @Entity 클래스 바이트 코드 생성 시 인자 없는 기본 생성자 제네레이션을 위한 레퍼런스
     apply(plugin = KotlinPlugin.noarg)
     apply(plugin = KotlinPlugin.allOpen)

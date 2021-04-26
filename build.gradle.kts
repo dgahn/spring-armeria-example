@@ -106,6 +106,12 @@ allprojects {
         }
     }
 
+    noArg {
+        AllOpen.annotationList.forEach {
+            annotation(it)
+        }
+    }
+
     dependencies {
         implementation(LogLibs.kotlinLogging)
         implementation(LogLibs.logback)
@@ -128,13 +134,6 @@ allprojects {
 
         dokkaHtmlPlugin(DocLibs.dokka)
     }
-
-    noArg {
-        AllOpen.annotationList.forEach {
-            annotation(it)
-        }
-    }
-
 
     kotlinter {
         ignoreFailures = false

@@ -60,10 +60,10 @@ tasks.jacocoTestCoverageVerification {
     }
 }
 
-idea {
-    module {
-        val kaptMain = file("${buildDir}/generated/source/kapt/main")
-        sourceDirs.add(kaptMain)
-        generatedSourceDirs.add(kaptMain)
-    }
-}
+//idea {
+//    module {
+//        val kaptMain = file("${buildDir}/generated/source/kapt/main")
+//        sourceDirs.add(kaptMain)
+//        generatedSourceDirs.add(kaptMain)
+//    }
+//}

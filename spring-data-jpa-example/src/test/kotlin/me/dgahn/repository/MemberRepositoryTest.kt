@@ -11,6 +11,8 @@ import me.dgahn.dto.MemberDto
 import me.dgahn.entity.Member
 import me.dgahn.entity.Team
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.data.domain.Example
+import org.springframework.data.domain.ExampleMatcher
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Slice
 import org.springframework.data.domain.Sort
@@ -187,7 +189,7 @@ open class MemberRepositoryTest(
         page.isFirst shouldBe true
         page.hasNext() shouldBe true
         // page에 map이 존재함.
-        page.map { MemberDto(id = it.id!!, username = it.username, teamName = "") }
+        page.map { MemberDto(id = it.id!!, username = it.username!!, teamName = "") }
 
         val slice: Slice<Member> = memberRepository.findSliceByAge(age, pageRequest)
 
@@ -296,5 +298,28 @@ open class MemberRepositoryTest(
         val spec = username("m1").and(teamName("teamA"))
         val member = memberRepository.findAll(spec)
         member shouldHaveSize 1
+    }
+
+    @Test
+    fun queryByExample() {
+        val teamA = Team(name = "teamA");
+        em.persist(teamA);
+
+        val m1 = Member(username = "m1", 0, teamA)
+        val m2 = Member(username = "m2", 0, teamA)
+        em.persist(m1)
+        em.persist(m2)
+
+        em.flush()
+        em.clear()
+
+        val team = Team(name = "teamA")
+        val member = Member(username = "m1", team = team)
+        val matcher = ExampleMatcher.matching().withIgnorePaths("age");
+        val example = Example.of(member, matcher)
+
+        val result = memberRepository.findAll(example)
+
+        result.first().username shouldBe "m1"
     }
 }

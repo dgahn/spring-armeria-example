@@ -18,18 +18,18 @@ class MemberController(
     @GetMapping("/members/{id}")
     fun findMember(@PathVariable("id") id: Long): String {
         val member = memberRepository.findById(id).get()
-        return member.username
+        return member.username!!
     }
 
     @GetMapping("/members2/{id}")
     fun findMember2(@PathVariable("id") member: Member): String {
-        return member.username
+        return member.username!!
     }
 
     @GetMapping("/members")
     fun list(@PageableDefault(size = 5) pageable: Pageable): Page<MemberDto> {
         val findAll = memberRepository.findAll(pageable)
-        return findAll.map { MemberDto(it.id!!, it.username, "") }
+        return findAll.map { MemberDto(it.id!!, it.username!!, "") }
     }
 
     @PostConstruct

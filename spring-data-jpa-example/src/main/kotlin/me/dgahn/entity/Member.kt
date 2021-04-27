@@ -19,8 +19,8 @@ class Member(
     @GeneratedValue
     @Column(name = "member_id")
     val id: Long? = null,
-    var username: String,
-    var age: Int,
+    var username: String? = null,
+    var age: Int? = null,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id")
     var team: Team? = null

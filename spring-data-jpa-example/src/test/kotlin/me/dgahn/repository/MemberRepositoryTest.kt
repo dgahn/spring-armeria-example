@@ -278,4 +278,23 @@ open class MemberRepositoryTest(
     fun `callCustom`() {
         memberRepository.findMemberCustom()
     }
+
+    @Test
+    fun `specBasic`() {
+        // given
+        val teamA = Team(name = "teamA");
+        em.persist(teamA);
+
+        val m1 = Member(username = "m1", 0, teamA)
+        val m2 = Member(username = "m2", 0, teamA)
+        em.persist(m1)
+        em.persist(m2)
+
+        em.flush()
+        em.clear()
+        // when
+        val spec = username("m1").and(teamName("teamA"))
+        val member = memberRepository.findAll(spec)
+        member shouldHaveSize 1
+    }
 }

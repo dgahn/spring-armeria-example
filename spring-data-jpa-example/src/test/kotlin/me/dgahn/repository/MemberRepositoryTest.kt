@@ -341,7 +341,26 @@ open class MemberRepositoryTest(
 
         em.flush()
         em.clear()
-        val findProjectionByUsername1 = memberRepository.findProjectionByUsername("m1", NestedClosedProjections::class.java)
+        val findProjectionByUsername1 =
+            memberRepository.findProjectionByUsername("m1", NestedClosedProjections::class.java)
         findProjectionByUsername1.first().getUsername() shouldBe "m1"
     }
+
+    @Test
+    fun nativeQuery() {
+        val teamA = Team(name = "teamA");
+        em.persist(teamA);
+
+        val m1 = Member(username = "m1", 0, teamA)
+        val m2 = Member(username = "m2", 0, teamA)
+        em.persist(m1)
+        em.persist(m2)
+
+        em.flush()
+        em.clear()
+
+        val result = memberRepository.findByNativeQuery("m1")
+        result.username shouldBe "m1"
+    }
+
 }

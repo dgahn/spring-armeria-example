@@ -71,4 +71,8 @@ interface MemberRepository : JpaRepository<Member, Long>, MemberRepositoryCustom
     fun findLockByUsername(username: String)
 
     fun <T> findProjectionByUsername(@Param("username") username: String, type: Class<T>): List<T>
+
+    @Query(value = "SELECT * FROM member WHERE username = ?", nativeQuery = true)
+    fun findByNativeQuery(username: String): Member
+
 }
